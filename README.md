@@ -1,6 +1,10 @@
 [README.md](https://github.com/user-attachments/files/30893685/README.md)
 # node7-crafting-ui
 
+
+
+<img width="1920" height="1079" alt="craftingui" src="https://github.com/user-attachments/assets/05254636-50d7-40be-8a6e-4cdd725cd417" />
+
 Universal full-screen crafting UI shell for the NODE7 RedM framework.
 
 ## v1.4.0 UI features
