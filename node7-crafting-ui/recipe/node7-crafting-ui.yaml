@@ -1,0 +1,19 @@
+$engine: 3
+$onesync: on
+name: NODE7 Crafting UI
+author: NODE7 Development Studios
+description: Universal full-screen crafting UI shell for NODE7 RedM resources.
+
+tasks:
+  - action: ensure_dir
+    path: ./resources/[node7-ui]
+
+  - action: copy_path
+    src: ./node7-crafting-ui
+    dest: ./resources/[node7-ui]/node7-crafting-ui
+
+  - action: append_file
+    file: ./server.cfg
+    data: |
+      exec @node7-crafting-ui/permissions.cfg
+      ensure node7-crafting-ui

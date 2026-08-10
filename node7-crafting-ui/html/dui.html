@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+    <title>Node7 Crafting DUI</title>
+    <link rel="stylesheet" href="dui.css">
+</head>
+<body>
+    <main id="duiRoot" class="app crafting-dui is-hidden" aria-hidden="true">
+        <div class="backdrop"></div>
+        <section class="craft-shell" aria-label="Crafting">
+            <header class="topbar">
+                <div class="brand-block">
+                    <div class="brand-mark">N7</div>
+                    <div>
+                        <div class="eyebrow">NODE7</div>
+                        <h1 id="title">CRAFTING</h1>
+                    </div>
+                </div>
+
+                <div class="station-block">
+                    <span class="station-label" id="station">WORKBENCH</span>
+                    <span class="station-divider"></span>
+                    <span class="station-location" id="location">UNKNOWN</span>
+                    <span class="station-divider"></span>
+                    <span id="stationStatus" class="station-status is-ready">READY</span>
+                </div>
+
+                <button id="closeButton" class="icon-button close-button" type="button" aria-label="Close crafting">
+                    <span>×</span>
+                </button>
+            </header>
+
+            <div class="content">
+                <aside class="sidebar panel">
+                    <div class="section-heading">
+                        <span>Categories</span>
+                        <span class="rule"></span>
+                    </div>
+                    <nav id="categories" class="category-list" aria-label="Crafting categories"></nav>
+
+                    <div class="sidebar-footer">
+                        <div class="key-row"><span class="keycap">ESC</span><span>Close</span></div>
+                        <div class="key-row"><span class="keycap">ARROWS</span><span>Browse recipes</span></div>
+                        <div class="key-row"><span class="keycap">Q / E</span><span>Categories</span></div>
+                        <div class="key-row"><span class="keycap">ENTER</span><span>Craft</span></div>
+                        <div class="ui-version">NODE7 CRAFTING UI</div>
+                    </div>
+                </aside>
+
+                <section class="recipes panel">
+                    <div class="recipe-toolbar">
+                        <div>
+                            <div class="section-heading compact">
+                                <span id="subtitle">Available Recipes</span>
+                                <span class="rule"></span>
+                            </div>
+                            <div id="recipeCount" class="muted">0 recipes</div>
+                        </div>
+
+                        <div class="recipe-actions">
+                            <div id="availabilityFilters" class="availability-filters" aria-label="Recipe availability filter">
+                                <button type="button" data-filter="all" class="is-active">ALL</button>
+                                <button type="button" data-filter="craftable">CRAFTABLE</button>
+                                <button type="button" data-filter="locked">LOCKED</button>
+                            </div>
+
+                            <label class="search-box" for="searchInput">
+                                <span class="search-glyph">⌕</span>
+                                <input id="searchInput" type="text" autocomplete="off" spellcheck="false" placeholder="Search recipes">
+                            </label>
+                        </div>
+                    </div>
+
+                    <div id="recipeGrid" class="recipe-grid"></div>
+
+                    <div id="emptyState" class="empty-state is-hidden">
+                        <div class="empty-mark">N7</div>
+                        <strong>No recipes found</strong>
+                        <span>Try another category, filter, or search term.</span>
+                    </div>
+
+                    <div id="loadingState" class="loading-state is-hidden" aria-live="polite">
+                        <span class="loading-ring"></span>
+                        <strong id="loadingText">LOADING RECIPES</strong>
+                        <span>Preparing crafting data...</span>
+                    </div>
+                </section>
+
+                <aside class="details panel">
+                    <div id="detailsEmpty" class="details-empty">
+                        <div class="empty-mark large">N7</div>
+                        <strong>Select a recipe</strong>
+                        <span>Recipe details will appear here.</span>
+                    </div>
+
+                    <div id="detailsContent" class="details-content is-hidden">
+                        <div class="detail-preview">
+                            <div id="detailIcon" class="large-icon">N7</div>
+                            <div class="preview-glow"></div>
+                        </div>
+
+                        <div class="detail-head">
+                            <div>
+                                <div id="detailRarity" class="rarity">RECIPE</div>
+                                <h2 id="detailName">Item</h2>
+                            </div>
+                            <div class="output-badge">
+                                <span>OUTPUT</span>
+                                <strong id="detailOutput">×1</strong>
+                            </div>
+                        </div>
+
+                        <p id="detailDescription" class="description"></p>
+
+                        <div class="meta-row">
+                            <div class="meta-card">
+                                <span>Craft Time</span>
+                                <strong id="detailTime">Instant</strong>
+                            </div>
+                            <div class="meta-card">
+                                <span>Quantity</span>
+                                <div class="quantity-control">
+                                    <button id="quantityMinus" type="button" aria-label="Decrease quantity">−</button>
+                                    <input id="quantityInput" type="number" min="1" value="1" inputmode="numeric">
+                                    <button id="quantityPlus" type="button" aria-label="Increase quantity">+</button>
+                                    <button id="quantityMax" class="quantity-max" type="button" aria-label="Set maximum craftable quantity">MAX</button>
+                                </div>
+                                <span id="maxCraftable" class="max-craftable">MAX CRAFTABLE: 1</span>
+                            </div>
+                        </div>
+
+                        <div class="ingredients-block">
+                            <div class="section-heading compact">
+                                <span>Required Materials</span>
+                                <span class="rule"></span>
+                            </div>
+                            <div id="ingredientList" class="ingredient-list"></div>
+                        </div>
+
+                        <div id="requirementsBlock" class="requirements-block is-hidden">
+                            <div class="section-heading compact">
+                                <span>Requirements</span>
+                                <span class="rule"></span>
+                            </div>
+                            <div id="requirementsList" class="requirements-list"></div>
+                        </div>
+
+                        <div id="lockMessage" class="lock-message is-hidden"></div>
+
+                        <button id="craftButton" class="craft-button" type="button">
+                            <span class="craft-main">CRAFT</span>
+                            <span id="craftOutput" class="craft-sub">Create ×1</span>
+                        </button>
+                    </div>
+                </aside>
+            </div>
+
+            <footer class="queue-bar">
+                <div id="activeCraft" class="active-craft is-hidden">
+                    <div id="activeCraftIcon" class="active-craft-icon">N7</div>
+                    <div class="active-craft-copy">
+                        <div class="active-craft-top">
+                            <span id="activeCraftStatus">CRAFTING</span>
+                            <strong id="activeCraftPercent">0%</strong>
+                        </div>
+                        <strong id="activeCraftName" class="active-craft-name">Current Craft</strong>
+                        <div class="active-craft-progress"><span id="activeCraftFill"></span></div>
+                        <div class="active-craft-meta">
+                            <span id="activeCraftQuantity">×1</span>
+                            <span id="activeCraftRemaining">--</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="queue-section">
+                    <div class="queue-heading">
+                        <span class="queue-dot"></span>
+                        <span>Craft Queue</span>
+                        <span id="queueCount" class="queue-count">0</span>
+                    </div>
+                    <div id="queueTrack" class="queue-track">
+                        <div class="queue-empty">No active crafts</div>
+                    </div>
+                </div>
+
+                <div id="busyState" class="busy-state is-hidden">
+                    <span class="spinner"></span>
+                    <span id="busyText">CRAFTING</span>
+                </div>
+            </footer>
+        </section>
+
+        <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+    </main>
+
+    <script src="dui.js"></script>
+</body>
+</html>
